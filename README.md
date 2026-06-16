@@ -1,114 +1,227 @@
 # Project One
 ## AI Task Workspace
 
-*Created by TSS Talent Lab. Version 1.2.*
+*Created by TSS Talent Lab. Version 1.3.*
 
 ---
 
 ## Overview
 
-In this project you build and deploy a working full-stack web application: an AI task workspace. Users sign in, create tasks, turn freeform notes into structured tasks with AI, and turn meeting transcripts into action items. You build it by following the software development lifecycle from start to finish, and you check that it works before you ship.
+In this project you build and deploy a working full-stack web application: an AI task workspace. Users sign up, sign in, manage tasks organised by category, and use AI to turn freeform notes and meeting transcripts into structured tasks. You follow the software development lifecycle from start to finish and verify everything works before you ship.
 
-This is your first full-stack build. Project Zero set up your tools. Here you use them to ship something real. This project runs over one and a half to two weeks. One and a half weeks is the target, and two weeks is the maximum. Everything is done inside one GitHub repository and submitted there.
+This project runs over one and a half to two weeks. One and a half weeks is the target; two weeks is the maximum. Everything lives in one GitHub repository.
+
+**The rule**: use AI to build fast. But you must understand every line you ship. On your review call we will ask you to explain any function, any route, any database decision. If you cannot explain it, you do not own it yet. Go back and learn it with your teach-me agent first.
+
+---
+
+## Before you start
+
+Confirm you have all of these before writing any code:
+
+- [ ] Repository forked and cloned locally
+- [ ] Node.js installed
+- [ ] Supabase account and project created
+- [ ] Vercel account created
+- [ ] AI API key received from TSS
+- [ ] ClickUp board set up with the lifecycle columns
+
+---
 
 ## What you are building
 
-The core application, all required:
+### Authentication and profile
 
-- **Tasks**: create, edit, complete, and delete tasks. Each task has a title, a description, a priority, a status, and a due date.
-- **A board**: show tasks on a board with columns by status, for example To Do, In Progress, and Done, and let the user move tasks across it. This board is a feature inside the app you are building. It is separate from the ClickUp board where you track your own work on this project.
-- **Notes to task (AI)**: the user types or pastes freeform text, and the app uses an AI model to turn it into one structured task with a title, description, priority, and due date, ready to save.
-- **Transcript to action items (AI)**: the user pastes a meeting transcript, and the app uses an AI model to pull out several action items, each with a title, an owner, and a due date, saved as tasks.
-- **Login**: each user signs in and sees only their own tasks.
+- Sign up with email and password
+- Log in and log out
+- Forgot password — user receives a reset email and sets a new password
+- Change password from the profile page
+- Update profile: display name
+- Every user sees only their own data — enforced at the database with Row Level Security, not just in the frontend
 
-## Optional bonus: connect Google Drive
+### Tasks
 
-If you finish the core with time to spare, take this on. It is a bonus, not a requirement, and it does not affect whether you pass. The user signs in with Google, and the app reads a meeting transcript file directly from their Google Drive and turns it into action items, with no copy and paste. It brings in Google sign-in and the Google Drive API, and it will stretch you. Only start it once the core is built, working, and deployed.
+Each task has:
 
-## How you work
+| Field | Values |
+|---|---|
+| Title | Required text |
+| Description | Optional text |
+| Priority | Low / Medium / High |
+| Status | To Do / In Progress / Done |
+| Due date | Date picker |
+| Category | Chosen from the user's own categories |
 
-You may use any AI agent to help you build this, including Claude Code, your teach-me agent, and your troubleshoot agent. Building fast with AI is the point of how we work. There is one hard rule alongside it: you must understand every part of what you ship. You must be able to explain what each function does, how data flows through the app from the browser to the back-end to the database and back, and why each choice was made. On your review call we will ask, and you will need to answer without notes. If you cannot explain a part, you do not yet own it, so go back and learn it with your teach-me agent before you present. The goal is to learn how to build, deploy, and ship with AI while genuinely holding the foundations underneath.
+A user can create, edit, mark complete, and delete any of their tasks. They can filter the task list by category, priority, or status.
 
-TSS provides your AI access for both building and for the app itself. If you run low on coding credit while building, tell us and we will provide a backup key. Keep every key on the server and out of Git.
+### Categories
 
-## Follow the software development lifecycle
+- Create a category with a name
+- Rename or delete a category
+- Assign a task to a category when creating or editing
+- View all tasks under a specific category
 
-Build this the way professional teams do, moving through the lifecycle and tracking every stage on your ClickUp board.
+### Board
 
-1. **Requirements**: before you write code, write a short requirements note in docs/requirements.md. What must the app do, and what does done look like for each feature.
-2. **Design**: draw an architecture diagram and save it in docs/architecture.md or as an image in docs. Show the pages, the back-end routes, the database tables, and where the AI calls happen.
-3. **Build**: build the features in small, clear commits. Every piece of work has a ticket on your ClickUp board and moves across it.
-4. **Test**: see the next section.
-5. **Deploy**: ship to a live public URL.
+- Kanban board with three columns: To Do, In Progress, Done
+- Move a task from one column to another
+- Board and task list show the same data — they stay in sync
 
-## Test your app before you ship
+### AI: notes to task
 
-Get a hands-on feel for testing, without going deep. Ask your teach-me agent for a short, plain explanation of what testing is and why it matters before you ship. Then check your own app: write a simple list of test cases covering your main features, what you do, what you expect, and what actually happens, and run through them. Record the results in TEST_SHEET.md as pass or fail. If you finish with time to spare, you can add one or two small automated checks on your own logic, but that is optional. You walk us through your test sheet when you present.
+- User types or pastes freeform text
+- App sends it to the AI via a server-side route (key never leaves the server)
+- AI returns one structured task: title, description, priority, due date
+- User reviews the result and can edit before saving
+- App handles the case where the AI returns something unexpected
+
+### AI: transcript to action items
+
+- User pastes a meeting transcript
+- App sends it to the AI via a server-side route
+- AI returns several action items, each with a title, an owner, and a due date
+- Each item is saved as a task
+- App handles the case where the AI returns something unexpected
+
+### Optional bonus: Google Drive
+
+If you finish the core with time to spare, let the user sign in with Google and read a meeting transcript directly from their Google Drive — no copy and paste. Only start this once the core is built, deployed, and fully working.
+
+---
+
+## Learn before you build
+
+Use your teach-me agent on every skill listed below before you write code for it. Say: *"teach me [skill name]"* and work through the full sprint. Log your confidence score in LEARNING_LOG.md before moving on. This is not optional.
+
+### 1. Next.js foundations
+- **File-based routing** — how pages map to URLs, dynamic routes (`[id]`), nested routes
+- **App Router** — layouts, `page.js` vs `layout.js`, loading states
+- **Server vs client components** — when to use each and why it matters
+- **API routes / Route Handlers** — how to write a server-side endpoint
+- **Environment variables** — `.env.local`, what `NEXT_PUBLIC_` exposes, why secrets must stay on the server
+
+### 2. React fundamentals
+- **useState** — managing local component state
+- **useEffect** — running code when something changes
+- **Controlled forms** — connecting inputs to state
+- **Conditional rendering** — showing different UI depending on state
+- **Props** — passing data between components
+
+### 3. Supabase and the database
+- **Supabase project setup** — creating tables, using the dashboard
+- **Postgres basics** — tables, columns, data types, primary keys, foreign keys
+- **Supabase JS client** — querying, inserting, updating, deleting rows
+- **Row Level Security (RLS)** — policies that stop users accessing each other's data — do not skip this
+- **Relationships** — how tasks link to categories and to users
+
+### 4. Authentication
+- **Supabase Auth** — signup, login, logout, password reset email flow
+- **Sessions** — how logged-in state persists between page loads
+- **Protected routes** — redirecting unauthenticated users
+- **Profile updates** — changing display name and password after sign-in
+
+### 5. AI integration
+- **Server-side API calls** — why the key must never go to the browser
+- **Prompt design** — writing a prompt that reliably returns structured JSON
+- **Parsing and validating AI output** — what to do when the model surprises you
+- **Error handling** — loading states, timeouts, user-facing error messages
+
+### 6. Deployment
+- **Vercel setup** — connecting your GitHub repo, auto-deploy on push
+- **Environment variables in Vercel** — setting them in the dashboard
+- **Production vs development** — what changes when you go live
+
+---
+
+## Build order
+
+Learn the skills first, then build. Do not start a phase until the previous one is working.
+
+| Phase | What you build | Learn first |
+|---|---|---|
+| 1 | Auth: signup, login, logout, reset, profile | Supabase Auth, sessions, protected routes |
+| 2 | Database schema: tasks, categories, profiles with RLS | Postgres basics, Supabase client, RLS |
+| 3 | Task CRUD: create, edit, complete, delete, filter | React forms, API routes, Supabase queries |
+| 4 | Categories: create, assign, filter | Relationships, Supabase queries |
+| 5 | Board: kanban columns, move tasks | React state, conditional rendering |
+| 6 | AI: notes to task | Prompt design, server routes, output validation |
+| 7 | AI: transcript to action items | Same as phase 6 |
+| 8 | Deploy to Vercel | Vercel setup, env vars in production |
+| 9 | Bonus: Google Drive | Google OAuth, Drive API |
+
+---
 
 ## Stack
 
-- **Front-end and back-end**: Next.js with React and JavaScript. TypeScript is not required for this project.
-- **Database and login**: Supabase. Postgres holds the data, and Supabase Auth handles sign-in. Use a real authentication system. Do not hand-roll password storage.
-- **AI for the app**: an AI model API. TSS provides the API key for the app's AI features. Every AI call goes through your own back-end so the key stays on the server and never reaches the browser. Check the model's output before you save it, and handle the case where it returns something unexpected.
-- **Google (optional bonus only)**: Google sign-in and the Google Drive API.
-- **Deploy**: Vercel.
+| Layer | Technology |
+|---|---|
+| Frontend + backend | Next.js with React and JavaScript |
+| Database + auth | Supabase (Postgres + Supabase Auth) |
+| AI | API key provided by TSS — all calls go through your server |
+| Deployment | Vercel |
+| Bonus only | Google OAuth + Google Drive API |
 
-## Security, do not skip these
+---
 
-- Keep every secret in environment variables, never in the code and never committed. Your .env file stays in .gitignore.
-- All AI calls happen on the server, so the key never reaches the browser.
-- Use real authentication, and enforce access at the database. Turn on Supabase Row Level Security so the database itself only lets a user read and write their own tasks. Filtering in the front-end alone is not secure.
-- Validate input before you send it to the AI or the database.
-- Show loading and error states, especially around the AI calls, which can be slow or can fail.
+## Security — do not skip
 
-## Repository structure
+- All secrets in environment variables — never in code, never committed
+- `.env.local` is in `.gitignore` — verify this before your first push
+- All AI calls happen server-side — the key never reaches the browser
+- Row Level Security on every table — test that a user cannot access another user's rows
+- Validate all input before sending to the AI or the database
+- Show loading and error states on every AI call
 
-```
-project-one/
-  README.md            This brief. Read it, do not edit it.
-  PRESENTATION.md      Your submission. All links, artifacts, and proof go here.
-  LEARNING_LOG.md      One short wrap-up per skill you learn.
-  TEST_SHEET.md        Your test cases and their outputs.
-  skills/
-    teach-me/SKILL.md       Your learning agent.
-    troubleshoot/SKILL.md   Your troubleshooting agent.
-  docs/
-    requirements.md    Write your requirements here first.
-    architecture.md    Put your architecture diagram here.
-  proof/               Screenshots and any proof go here.
-  web/                 Build your application here.
-```
+---
 
-## What to submit and how to present
+## How to use your agents
 
-You present this project in three formats, plus your test sheet.
+**teach-me** (`skills/teach-me/SKILL.md`)
+Say *"teach me [skill]"* before each phase. Work through all five steps — do not skip the break-it step. Log your score in LEARNING_LOG.md.
 
-1. **Written**: fill in PRESENTATION.md with every link, artifact, and proof of learning, including a short summary of your test sheet.
-2. **Video**: record a Loom walkthrough of the live app, the board, both AI features, and your repository. Add the link to PRESENTATION.md.
-3. **Live**: schedule a call and present. Share your screen, demo the app live, walk through your code, and explain how it works. Expect questions on any function.
+**troubleshoot** (`skills/troubleshoot/SKILL.md`)
+When something breaks, come here before guessing. Paste the exact error message. Work through the steps — do not ask for the fix.
 
-Also keep LEARNING_LOG.md updated as you go, and provide your completed TEST_SHEET.md.
+---
+
+## Test before you ship
+
+Write a test case in TEST_SHEET.md for every main feature: what you do, what you expect, what actually happened. Run through them all and record pass or fail. Walk us through your sheet on the review call.
+
+---
+
+## What to submit
+
+1. **Written** — complete PRESENTATION.md with every link, artifact, and proof
+2. **Video** — Loom walkthrough of the live app, both AI features, your board, your repository
+3. **Live call** — demo the app, walk through your code, explain every decision
+
+---
 
 ## Definition of done
 
 - [ ] Requirements written in docs/requirements.md
 - [ ] Architecture diagram in docs/architecture.md
-- [ ] Tasks: create, edit, complete, delete, all working
-- [ ] Board with status columns the user can move tasks across
-- [ ] Notes to task AI feature working, output checked before saving
+- [ ] Sign up, log in, log out working
+- [ ] Forgot password and reset flow working
+- [ ] Change password and update profile working
+- [ ] Tasks: create, edit, complete, delete working
+- [ ] Categories: create, assign, filter working
+- [ ] Board with columns and task movement working
+- [ ] Notes to task AI feature working, output validated before saving
 - [ ] Transcript to action items AI feature working
-- [ ] Login working, each user sees only their own tasks
-- [ ] AI calls run on the back-end, key never exposed to the browser
-- [ ] Database access restricted with Row Level Security so users reach only their own data
-- [ ] Secrets in environment variables, .env kept out of Git
+- [ ] All AI calls run server-side — key never in the browser
+- [ ] Row Level Security on all tables — tested, not assumed
+- [ ] All secrets in environment variables, .env.local out of Git
 - [ ] App deployed to a live public URL
-- [ ] TEST_SHEET.md complete with your main features checked, pass or fail
-- [ ] Board tracked across the lifecycle stages as you worked
-- [ ] Loom walkthrough recorded, link in PRESENTATION.md
-- [ ] PRESENTATION.md and LEARNING_LOG.md complete
-- [ ] TSS reviewer added as a collaborator on your repository
-- [ ] Call scheduled
-- [ ] Optional bonus: Google sign-in and reading a transcript from Google Drive working
+- [ ] TEST_SHEET.md complete with all main features checked
+- [ ] LEARNING_LOG.md updated after every skill
+- [ ] ClickUp board tracked across all lifecycle stages
+- [ ] Loom recorded and linked in PRESENTATION.md
+- [ ] PRESENTATION.md complete
+- [ ] TSS reviewer added as collaborator
+- [ ] Review call scheduled
+- [ ] Optional bonus: Google sign-in and Drive transcript reading working
 
 ---
 
