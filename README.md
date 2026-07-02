@@ -1,4 +1,9 @@
-# Project One
+# Project One (Retired)
+
+**This repository is retired and archived.** Project 1 has been replaced by [project-1-ai-task-manager](https://github.com/Tech-Supersonic/project-1-ai-task-manager). Fork that repository instead of this one.
+
+---
+
 ## AI Task Workspace
 
 *Created by TSS Talent Lab. Version 1.3.*
